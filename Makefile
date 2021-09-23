@@ -4,15 +4,13 @@ TITLE="EPIC9 OWRT_CLI"
 
 PKG_NAME="OWRT_CLI"
 PKG_VERSION="Epic9.V1.S1"
-PKG_RELEASE=1
+PKG_RELEASE=2
 
 MODULE_FILES=cli.py plugins.py
-#MODULE_FILES_DIR=/usr/lib/python3.7/
 
-#ETC_FILES=sendtestmail.py cli.py
 ETC_FILES_DIR=/etc/netping_cli/
 
-CLI_LINK="netping"
+CLI_LINK=netping
 
 EBNF_DIR="frontend/model/ebnf/"
 COMPILED_EBNF_DIR="grammars"
@@ -34,5 +32,4 @@ install:
 
 clean:
 	rm /usr/bin/$(CLI_LINK)
-
 	rm -rf $(ETC_FILES_DIR)

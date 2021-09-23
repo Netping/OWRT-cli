@@ -6,9 +6,11 @@ from plugins import PluginParser
 
 
 #TODO generate options from file
-@click.command(cls=PluginParser)
-def main():
-	pass
+#@click.command(cls=PluginParser)
+#def main():
+#	pass
+cli = PluginParser()
 
 if __name__ == "__main__":
-    main()
+    #main()
+    cli()
