@@ -4,10 +4,12 @@ TITLE="EPIC9 OWRT_CLI"
 
 PKG_NAME="OWRT_CLI"
 PKG_VERSION="Epic9.V1.S1"
-PKG_RELEASE=2
+PKG_RELEASE=3
 
-MODULE_FILES=cli.py plugins.py
+MODULE_FILES=netpingcli.py
+MODULE_FILES_DIR=/usr/lib/python3.7/
 
+ETC_FILES=cli.py
 ETC_FILES_DIR=/etc/netping_cli/
 
 CLI_LINK=netping
@@ -22,7 +24,9 @@ all: install
 	
 install:
 	mkdir $(ETC_FILES_DIR)
-	for f in $(MODULE_FILES); do cp $${f} $(ETC_FILES_DIR); done
+	#mkdir $(MODULE_FILES_DIR)
+	for f in $(MODULE_FILES); do cp $${f} $(MODULE_FILES_DIR); done
+	for f in $(ETC_FILES); do cp $${f} $(ETC_FILES_DIR); done
 
 	#compile ebnf grammars for cli
 	#mkdir $(ETC_FILES_DIR)$(COMPILED_EBNF_DIR)
@@ -33,3 +37,5 @@ install:
 clean:
 	rm /usr/bin/$(CLI_LINK)
 	rm -rf $(ETC_FILES_DIR)
+
+	for f in $(MODULE_FILES); do rm -f $(MODULE_FILES_DIR)$${f}; done
