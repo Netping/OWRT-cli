@@ -4,12 +4,12 @@ TITLE="EPIC9 OWRT_CLI"
 
 PKG_NAME="OWRT_CLI"
 PKG_VERSION="Epic9.V1.S1"
-PKG_RELEASE=3
+PKG_RELEASE=4
 
 MODULE_FILES=netpingcli.py
 MODULE_FILES_DIR=/usr/lib/python3.7/
 
-ETC_FILES=cli.py
+ETC_FILES=cli.py confparser.py
 ETC_FILES_DIR=/etc/netping_cli/
 
 CLI_LINK=netping

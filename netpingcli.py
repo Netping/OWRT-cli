@@ -15,6 +15,9 @@ class PluginParser(click.MultiCommand):
                 for file in e['files']:
                     rv.append(file[4:-3])
 
+                if e['config']:
+                    rv.append('config')
+
         rv.sort()
 
         return rv
@@ -33,4 +36,11 @@ class PluginParser(click.MultiCommand):
                             code = compile(f.read(), fn, 'exec')
                             eval(code, ns, ns)
 
-        return ns['main']  
+                    if e['config'] and cmd_name == 'config':
+                        #config parser
+                        e['exec'] = True
+                        with open("/etc/netping_cli/confparser.py") as f:
+                            code = compile(f.read(), fn, 'exec')
+                            eval(code, ns, ns)
+
+        return ns['main']
