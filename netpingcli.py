@@ -36,11 +36,11 @@ class PluginParser(click.MultiCommand):
                             code = compile(f.read(), fn, 'exec')
                             eval(code, ns, ns)
 
-                    if e['config'] and cmd_name == 'config':
-                        #config parser
-                        e['exec'] = True
-                        with open("/etc/netping_cli/confparser.py") as f:
-                            code = compile(f.read(), fn, 'exec')
-                            eval(code, ns, ns)
+                if e['config'] and cmd_name == 'config':
+                    #config parser
+                    e['exec'] = True
+                    with open("/etc/netping_cli/confparser.py") as f:
+                        code = compile(f.read(), "/etc/netping_cli/confparser.py", 'exec')
+                        eval(code, ns, ns)
 
         return ns['main']
