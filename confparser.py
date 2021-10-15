@@ -1,6 +1,7 @@
 import click
 import sys
 import ubus
+import os
 
 
 
@@ -67,6 +68,54 @@ def set(ctx, section, option, value):
         ubus.connect()
 
         ubus.call("uci", "set", {"config" : element['config'], "section" : section, "values" : { option : value }})
+        ubus.call("uci", "commit", {"config" : element['config']})
+
+        ubus.disconnect()
+    except:
+        print("Can't connect to ubus")
+
+@main.command()
+@click.argument('section', required=True)
+@click.argument('value', required=True)
+@click.pass_context
+def addsection(ctx, section, value):
+    """Add new section to UCI config\n
+    SECTION - section name in UCI config\n
+    VALUE - type of section\n
+    """
+    element = None
+    for e in ctx.obj:
+        if e['exec']:
+            element = e
+            break
+
+    #via os because ubus doesn't work
+    os.system("uci set " + element['config'] + "." + section + "='" + value + "'")
+    os.system("uci commit " + element['config'])
+
+@main.command()
+@click.argument('section', required=True)
+@click.argument('option', required=False)
+@click.pass_context
+def delete(ctx, section, option):
+    """Delete parameters from UCI config\n
+    SECTION - section name in UCI config\n
+    OPTION - option name of section in UCI config\n
+    """
+    element = None
+    for e in ctx.obj:
+        if e['exec']:
+            element = e
+            break
+
+    try:
+        ubus.connect()
+
+        if option:
+            ubus.call("uci", "delete", {"config" : element['config'], "section" : section, "option" : option})
+        else:
+            ubus.call("uci", "delete", {"config" : element['config'], "section" : section})
+
         ubus.call("uci", "commit", {"config" : element['config']})
 
         ubus.disconnect()
