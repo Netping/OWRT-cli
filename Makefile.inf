@@ -14,24 +14,37 @@ ETC_FILES_DIR=/etc/netping_cli/
 
 CLI_LINK=netping
 
-EBNF_DIR="frontend/model/ebnf/"
-COMPILED_EBNF_DIR="grammars"
-
 
 .PHONY: all install
 
-all: install
+all: configure build install
+
+build:
+	@echo "Nothing to do"
+
+configure:
+	@echo "Nothing to do"
 	
 install:
+ifneq ($(INSTALL_DIR),)
+	-mkdir -p $(INSTALL_DIR)$(ETC_FILES_DIR)
+else
 	mkdir $(ETC_FILES_DIR)
-	for f in $(ETC_FILES); do cp $${f} $(ETC_FILES_DIR); done
+endif
 
-	#compile ebnf grammars for cli
-	#mkdir $(ETC_FILES_DIR)$(COMPILED_EBNF_DIR)
-	#for f in $(shell ls ${EBNF_DIR}); do fname=`echo $${f} | sed 's/\(.*\)\..*/\1/'`; python3 -m lark.tools.nearley $(EBNF_DIR)/$${f} main ./nearley > $(ETC_FILES_DIR)$(COMPILED_EBNF_DIR)/$${fname}.py; done
+	for f in $(ETC_FILES); do cp $${f} $(INSTALL_DIR)$(ETC_FILES_DIR); done
 
+ifeq ($(INSTALL_DIR),)
 	ln -s $(ETC_FILES_DIR)cli.py /usr/bin/$(CLI_LINK)
+else
+	mkdir -p $(INSTALL_DIR)/usr/bin
+	ln -sf $(ETC_FILES_DIR)cli.py $(INSTALL_DIR)/usr/bin/$(CLI_LINK)
+endif
 
 clean:
+ifeq ($(INSTALL_DIR),)
 	rm /usr/bin/$(CLI_LINK)
 	rm -rf $(ETC_FILES_DIR)
+else
+	rm -rf $(INSTALL_DIR)
+endif
