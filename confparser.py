@@ -75,13 +75,13 @@ def set(ctx, section, option, value):
         print("Can't connect to ubus")
 
 @main.command()
-@click.argument('section', required=True)
-@click.argument('value', required=True)
+@click.argument('sectiontype', required=True)
+@click.argument('sectionname', required=False)
 @click.pass_context
-def addsection(ctx, section, value):
+def addsection(ctx, sectionname, sectiontype):
     """Add new section to UCI config\n
-    SECTION - section name in UCI config\n
-    VALUE - type of section\n
+    SECTIONNAME - section name in UCI config\n
+    SECTIONTYPE - type of section\n
     """
     element = None
     for e in ctx.obj:
@@ -90,7 +90,10 @@ def addsection(ctx, section, value):
             break
 
     #via os because ubus doesn't work
-    os.system("uci set " + element['config'] + "." + section + "='" + value + "'")
+    if sectionname:
+        os.system("uci set " + element['config'] + "." + sectionname + "='" + sectiontype + "'")
+    else:
+        os.system("uci add " + element['config'] + " " + sectiontype)
     os.system("uci commit " + element['config'])
 
 @main.command()
