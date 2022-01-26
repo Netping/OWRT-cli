@@ -28,21 +28,17 @@ def show(ctx):
     except:
         print("Can't connect to ubus")
 
-    avail_types = ( 'info', 'globals' )
-    avail_options = ( 'name', 'id' )
-
     confvalues = ubus.call("uci", "get", {"config": element['config']})
     for confdict in list(confvalues[0]['values'].values()):
-        if confdict['.type'] in avail_types or (confdict.keys() & avail_options):
-            print("Section \"" + confdict['.name'] + "\":")
-            for key, value in confdict.items():
-                if type(value) == list:
-                    continue
+        print("Section \"" + confdict['.name'] + "\":")
+        for key, value in confdict.items():
+            if type(value) == list:
+                continue
 
-                if not key.startswith('.'):
-                    print("\t" + key + ": " + value)
+            if not key.startswith('.'):
+                print("\t" + key + ": " + value)
 
-            print('\n')
+        print('\n')
 
     ubus.disconnect()
 
