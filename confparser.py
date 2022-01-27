@@ -33,6 +33,8 @@ def show(ctx):
         print("Section \"" + confdict['.name'] + "\":")
         for key, value in confdict.items():
             if type(value) == list:
+                for v in value:
+                    print("\t" + v)
                 continue
 
             if not key.startswith('.'):
