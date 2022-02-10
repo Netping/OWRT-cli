@@ -5,15 +5,15 @@ from netpingcli import *
 
 
 
-search_folder = "/etc/"
-prefix = "netping_"
+search_folder = "/etc/netping/"
+#prefix = "netping_"
 commands = []
 conf_file = "Configname"
 help_file = "Help"
 
 #build right list with commands
 for file in os.listdir(search_folder):
-    if not file.startswith(prefix) or not os.path.isdir(search_folder + file):
+    if not os.path.isdir(search_folder + file):
         continue
 
     cmd_path = search_folder + file + "/commands"
@@ -21,7 +21,7 @@ for file in os.listdir(search_folder):
     value = {}
 
     if os.path.exists(cmd_path) and os.path.isdir(cmd_path):
-        value['name'] = file.replace(prefix, "")
+        value['name'] = file
         value['files'] = os.listdir(cmd_path)
         value['config'] = ""
         value['exec'] = False

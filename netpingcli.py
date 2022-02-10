@@ -4,7 +4,7 @@ import click
 
 
 
-search_folder = "/etc/"
+search_folder = "/etc/netping/"
 
 class PluginParser(click.MultiCommand):
     def list_commands(self, ctx):
@@ -29,7 +29,7 @@ class PluginParser(click.MultiCommand):
         for e in ctx.obj:
             if ctx.info_name == e['name']:
                 for file in e['files']:
-                    cmd_folder = search_folder + "netping_" + e['name'] + "/commands"
+                    cmd_folder = search_folder + e['name'] + "/commands"
                     fn = os.path.join(cmd_folder, 'cmd_{}.py'.format(cmd_name))
                     if os.path.exists(fn):
                         with open(fn) as f:
@@ -39,8 +39,8 @@ class PluginParser(click.MultiCommand):
                 if e['config'] and cmd_name == 'config':
                     #config parser
                     e['exec'] = True
-                    with open("/etc/netping_cli/confparser.py") as f:
-                        code = compile(f.read(), "/etc/netping_cli/confparser.py", 'exec')
+                    with open("/etc/netping/cli/confparser.py") as f:
+                        code = compile(f.read(), "/etc/netping/cli/confparser.py", 'exec')
                         eval(code, ns, ns)
 
         return ns['main']
