@@ -68,9 +68,12 @@ def set(ctx, section, option, value):
         ubus.call("uci", "set", {"config" : element['config'], "section" : section, "values" : { option : value }})
         ubus.call("uci", "commit", {"config" : element['config']})
 
+        #send commit signal
+        ubus.send("commit", {"config" : element['config']})
+
         ubus.disconnect()
     except:
-        print("Can't connect to ubus")
+        print("Can't set parameter")
 
 @main.command()
 @click.argument('sectiontype', required=True)
@@ -93,6 +96,14 @@ def addsection(ctx, sectionname, sectiontype):
     else:
         os.system("uci add " + element['config'] + " " + sectiontype)
     os.system("uci commit " + element['config'])
+
+    #send commit signal
+    try:
+        ubus.connect()
+        ubus.send("commit", {"config" : element['config']})
+        ubus.disconnect()
+    except:
+        pass
 
 @main.command()
 @click.argument('section', required=True)
@@ -118,7 +129,9 @@ def delete(ctx, section, option):
             ubus.call("uci", "delete", {"config" : element['config'], "section" : section})
 
         ubus.call("uci", "commit", {"config" : element['config']})
+        #send commit signal
+        ubus.send("commit", {"config" : element['config']})
 
         ubus.disconnect()
     except:
-        print("Can't connect to ubus")
+        print("Can't delete component")
