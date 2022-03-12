@@ -65,6 +65,17 @@ def set(ctx, section, option, value):
     try:
         ubus.connect()
 
+        #validate values
+        if element['types']:
+            types = element['types']
+            #ubus call input validate '{"value":"wrong value","lang":"en","datatype":"oid"}'
+            result = ubus.call("input", "validate", { "value" : value, "lang" : "en", "datatype" : types[option] })
+            result = result[0]
+
+            if 'error' in list(result.keys()):
+                ubus.disconnect()
+                raise ValueError("Valid checking error: " + result['error'])
+            
         ubus.call("uci", "set", {"config" : element['config'], "section" : section, "values" : { option : value }})
         ubus.call("uci", "commit", {"config" : element['config']})
 
@@ -72,8 +83,9 @@ def set(ctx, section, option, value):
         ubus.send("commit", {"config" : element['config']})
 
         ubus.disconnect()
-    except:
+    except Exception as ex:
         print("Can't set parameter")
+        print(str(ex))
 
 @main.command()
 @click.argument('sectiontype', required=True)

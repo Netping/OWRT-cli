@@ -10,6 +10,7 @@ search_folder = "/etc/netping/"
 commands = []
 conf_file = "Configname"
 help_file = "Help"
+types_file = "Types"
 
 #build right list with commands
 for file in os.listdir(search_folder):
@@ -26,6 +27,8 @@ for file in os.listdir(search_folder):
         value['config'] = ""
         value['exec'] = False
         value['help'] = ''
+        value['types'] = {}
+
         if os.path.exists(search_folder + file + "/" + conf_file):
             with open(search_folder + file + "/" + conf_file) as f:
                 value['config'] = f.readline().strip()
@@ -33,6 +36,21 @@ for file in os.listdir(search_folder):
         if os.path.exists(search_folder + file + "/" + help_file):
             with open(search_folder + file + "/" + help_file) as f:
                 value['help'] = f.read()
+
+        if os.path.exists(search_folder + file + "/" + types_file):
+            with open(search_folder + file + "/" + types_file) as f:
+                #parse types
+                option_types = {}
+
+                lines = f.readlines()
+                for line in lines:
+                    v = line.split(':')
+
+                    option = v[0].strip()
+                    option_type = v[1].strip()
+                    option_types[option] = option_type
+
+                value['types'] = option_types
 
         commands.append(value)
 

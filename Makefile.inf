@@ -4,7 +4,7 @@ TITLE="OWRT-cli"
 
 PKG_NAME="OWRT-cli"
 PKG_VERSION="0.1"
-PKG_RELEASE=10
+PKG_RELEASE=11
 
 PKG_DEPENDS=OWRT-PLIB-click
 
@@ -33,7 +33,7 @@ install:
 ifneq ($(INSTALL_DIR),)
 	-mkdir -p $(INSTALL_DIR)$(ETC_FILES_DIR)
 else
-	mkdir $(ETC_FILES_DIR)
+	mkdir -p $(ETC_FILES_DIR)
 endif
 
 	for f in $(ETC_FILES); do cp $${f} $(INSTALL_DIR)$(ETC_FILES_DIR); done
