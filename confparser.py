@@ -2,6 +2,7 @@ import click
 import sys
 import ubus
 import os
+import json
 
 
 
@@ -46,15 +47,16 @@ def show(ctx):
 
 @main.command()
 @click.argument('section', required=True)
-@click.argument('option', required=True)
-@click.argument('value', required=True)
+@click.argument('values', required=True)
 @click.pass_context
-def set(ctx, section, option, value):
+#def set(ctx, section, option, value):
+def set(ctx, section, values):
     """Setting parameters to UCI config\n
     SECTION - section name in UCI config\n
-    OPTION - option name of section in UCI config\n
-    VALUE - value for option of section in UCI config\n
+    VALUES - json object with parameters like in section with name SECTION
     """
+
+    values = json.loads(values)
 
     element = None
     for e in ctx.obj:
@@ -70,19 +72,21 @@ def set(ctx, section, option, value):
             data = element['types']
             for e in data:
                 if e['section_name'] == section:
-                    types = e['types']
-                    #ubus call input validate '{"value":"wrong value","lang":"en","datatype":"oid"}'
-                    result = ubus.call("input", "validate", { "value" : value, "lang" : "en", "datatype" : types[option] })
-                    result = result[0]
+                    for key, value in values.items():
+                        option = key
+                        types = e['types']
 
-                    if 'error' in list(result.keys()):
-                        ubus.disconnect()
-                        raise ValueError("Valid checking error: " + result['error'])
+                        result = ubus.call("input", "validate", { "value" : value, "lang" : "en", "datatype" : types[option] })
+                        result = result[0]
+
+                        if 'error' in list(result.keys()):
+                            ubus.disconnect()
+                            raise ValueError("Valid checking error: " + result['error'])
                         
                     break
             
-        ubus.call("uci", "set", {"config" : element['config'], "section" : section, "values" : { option : value }})
-        ubus.call("uci", "commit", {"config" : element['config']})
+        ubus.call("uci", "set", { "config" : element['config'], "section" : section, "values" : values })
+        ubus.call("uci", "commit", { "config" : element['config'] })
 
         #send commit signal
         ubus.send("commit", {"config" : element['config']})

@@ -39,19 +39,6 @@ for file in os.listdir(search_folder):
                 value['help'] = f.read()
 
         if os.path.exists(search_folder + file + "/" + types_file):
-            """with open(search_folder + file + "/" + types_file) as f:
-                #parse types
-                option_types = {}
-
-                lines = f.readlines()
-                for line in lines:
-                    v = line.split(':')
-
-                    option = v[0].strip()
-                    option_type = v[1].strip()
-                    option_types[option] = option_type
-
-                value['types'] = option_types"""
             with open(search_folder + file + "/" + types_file) as json_file:
                 data = json.load(json_file)
                 value['types'] = data
