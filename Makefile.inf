@@ -4,7 +4,7 @@ TITLE="OWRT-cli"
 
 PKG_NAME="OWRT-cli"
 PKG_VERSION="0.1"
-PKG_RELEASE=13
+PKG_RELEASE=14
 
 PKG_DEPENDS=OWRT-PLIB-click
 
@@ -13,6 +13,10 @@ MODULE_FILES_DIR=/usr/lib/python3.7/
 
 ETC_FILES=cli.py confparser.py netpingcli.py
 ETC_FILES_DIR=/etc/netping/cli/
+
+TESTS_SRC_DIR=Tests
+
+INSTALL_DIR=
 
 CLI_LINK=netping
 
@@ -37,6 +41,7 @@ else
 endif
 
 	for f in $(ETC_FILES); do cp $${f} $(INSTALL_DIR)$(ETC_FILES_DIR); done
+	cp -r $(TESTS_SRC_DIR) $(INSTALL_DIR)$(ETC_FILES_DIR)
 
 ifeq ($(INSTALL_DIR),)
 	ln -s $(ETC_FILES_DIR)cli.py /usr/bin/$(CLI_LINK)
