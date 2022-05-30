@@ -27,11 +27,14 @@ def test_commands():
     p = subprocess.Popen('netping', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     while True:
         line = p.stdout.readline()
+        if not line:
+            print('No module to test commands')
+            break
         if line == b'Commands:\n':
             break
     module = p.stdout.readline()
     if module:
-        module = module[2:-1].decode("utf-8")
+        module = module.decode("utf-8").strip().split(' ')[0]
 
         try:
             res = os.system(f"{ashcmd} {module} config addsection {section} {section_name}")
